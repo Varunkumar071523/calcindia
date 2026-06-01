@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcIndia – Free Online Calculators for India</title>
+<meta name="description" content="Free online calculators for Indians – EMI, GST, SIP, Age, BMI and more. Fast, accurate, no signup needed.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #14171f;
+    --card: #1a1e2a;
+    --border: #252a38;
+    --accent: #ff6b35;
+    --accent2: #ffd166;
+    --green: #06d6a0;
+    --blue: #4cc9f0;
+    --purple: #9b5de5;
+    --text: #eef0f6;
+    --muted: #7a8099;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5%;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 80px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(255,107,53,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,107,53,0.12);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(255,107,53,0.25);
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin: 0 auto 36px; line-height: 1.7; }
+  .calc-tabs {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-bottom: 0;
+  }
+  .tab-btn {
+    padding: 10px 22px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tab-btn:hover, .tab-btn.active {
+    border-color: var(--accent);
+    color: var(--text);
+    background: rgba(255,107,53,0.1);
+  }
+  .tab-btn.active { color: var(--accent); font-weight: 500; }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 980px; margin: 0 auto; padding: 40px 5% 80px; }
+
+  /* CALCULATOR PANELS */
+  .calc-panel { display: none; animation: fadeIn .3s ease; }
+  .calc-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .calc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  @media(max-width: 680px) { .calc-card { grid-template-columns: 1fr; } }
+
+  .calc-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .calc-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 28px; line-height: 1.6; }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+  .field select option { background: var(--card); }
+
+  .range-wrap { position: relative; }
+  .range-wrap input[type=range] {
+    -webkit-appearance: none;
+    width: 100%; height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .range-wrap input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(255,107,53,0.2);
+  }
+  .range-val {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: var(--muted); margin-top: 6px;
+  }
+
+  .calc-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    margin-top: 8px;
+  }
+  .calc-btn:hover { background: #ff8255; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,107,53,0.3); }
+  .calc-btn:active { transform: translateY(0); }
+
+  /* RESULTS */
+  .results-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .result-placeholder {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .result-placeholder .icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+  .result-main {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .result-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .result-rows { display: flex; flex-direction: column; gap: 14px; }
+  .result-row {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .result-row .rk { font-size: 0.85rem; color: var(--muted); }
+  .result-row .rv { font-size: 0.95rem; font-weight: 500; }
+  .rv.green { color: var(--green); }
+  .rv.blue { color: var(--blue); }
+  .rv.yellow { color: var(--accent2); }
+
+  /* CHART BAR */
+  .chart-bar-wrap { margin-top: 20px; }
+  .chart-label { font-size: 0.78rem; color: var(--muted); margin-bottom: 8px; }
+  .bar-track { background: var(--border); border-radius: 6px; height: 12px; overflow: hidden; margin-bottom: 8px; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+  .bar-legend { display: flex; gap: 16px; margin-top: 8px; }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--muted); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 5%;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* AD PLACEHOLDER */
+  .ad-slot {
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin: 28px 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Calc<span>India</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Finance</a></li>
+    <li><a href="#">Tax</a></li>
+    <li><a href="#">Health</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">🇮🇳 Made for India</div>
+  <h1>Free Calculators for<br><em>Every Indian</em></h1>
+  <p>EMI, GST, SIP, Age, BMI — fast, accurate results. No signup, no ads interrupting your flow.</p>
+  <div class="calc-tabs">
+    <button class="tab-btn active" onclick="showCalc('emi', this)">🏦 EMI</button>
+    <button class="tab-btn" onclick="showCalc('gst', this)">🧾 GST</button>
+    <button class="tab-btn" onclick="showCalc('sip', this)">📈 SIP</button>
+    <button class="tab-btn" onclick="showCalc('age', this)">🎂 Age</button>
+    <button class="tab-btn" onclick="showCalc('bmi', this)">⚖️ BMI</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="ad-slot">Advertisement — Google AdSense</div>
+
+  <!-- EMI CALCULATOR -->
+  <div id="calc-emi" class="calc-panel active">
+    <div class="calc-card">
+      <div>
+        <div class="calc-title">EMI Calculator</div>
+        <div class="calc-desc">Calculate your monthly loan EMI for home, car, or personal loans instantly.</div>
+        <div class="field">
+          <label>Loan Amount (₹)</label>
+          <input type="number" id="emi-amount" value="1000000" placeholder="e.g. 10,00,000">
+        </div>
+        <div class="field">
+          <label>Annual Interest Rate (%)</label>
+          <div class="range-wrap">
+            <input type="range" id="emi-rate-range" min="1" max="24" step="0.1" value="8.5" oninput="document.getElementById('emi-rate').value=this.value">
+            <input type="number" id="emi-rate" value="8.5" style="margin-top:10px" oninput="document.getElementById('emi-rate-range').value=this.value">
+            <div class="range-val"><span>1%</span><span>24%</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Loan Tenure</label>
+          <div style="display:flex;gap:10px">
+            <input type="number" id="emi-tenure" value="20" style="flex:1">
+            <select id="emi-tenure-type" style="width:110px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 10px;color:var(--text);font-size:0.9rem;outline:none">
+              <option value="years">Years</option>
+              <option value="months">Months</option>
+            </select>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcEMI()">Calculate EMI →</button>
+      </div>
+      <div class="results-panel" id="emi-result">
+        <div class="result-placeholder"><div class="icon">🏦</div>Enter your loan details<br>and click Calculate</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GST CALCULATOR -->
+  <div id="calc-gst" class="calc-panel">
+    <div class="calc-card">
+      <div>
+        <div class="calc-title">GST Calculator</div>
+        <div class="calc-desc">Add or remove GST from any amount. Supports all Indian GST slabs: 5%, 12%, 18%, 28%.</div>
+        <div class="field">
+          <label>Amount (₹)</label>
+          <input type="number" id="gst-amount" value="10000" placeholder="Enter amount">
+        </div>
+        <div class="field">
+          <label>GST Rate</label>
+          <select id="gst-rate">
+            <option value="5">5% — Essential goods</option>
+            <option value="12">12% — Standard goods</option>
+            <option value="18" selected>18% — Most services</option>
+            <option value="28">28% — Luxury goods</option>
+            <option value="custom">Custom %</option>
+          </select>
+        </div>
+        <div class="field" id="gst-custom-wrap" style="display:none">
+          <label>Custom GST Rate (%)</label>
+          <input type="number" id="gst-custom" placeholder="Enter custom rate">
+        </div>
+        <div class="field">
+          <label>Calculation Type</label>
+          <select id="gst-type">
+            <option value="add">Add GST (exclusive → inclusive)</option>
+            <option value="remove">Remove GST (inclusive → exclusive)</option>
+          </select>
+        </div>
+        <button class="calc-btn" onclick="calcGST()">Calculate GST →</button>
+      </div>
+      <div class="results-panel" id="gst-result">
+        <div class="result-placeholder"><div class="icon">🧾</div>Enter amount and GST rate<br>to see breakdown</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIP CALCULATOR -->
+  <div id="calc-sip" class="calc-panel">
+    <div class="calc-card">
+      <div>
+        <div class="calc-title">SIP Calculator</div>
+        <div class="calc-desc">Estimate your mutual fund SIP returns with compound interest over time.</div>
+        <div class="field">
+          <label>Monthly Investment (₹)</label>
+          <input type="number" id="sip-amount" value="5000" placeholder="e.g. 5,000">
+        </div>
+        <div class="field">
+          <label>Expected Annual Return (%)</label>
+          <div class="range-wrap">
+            <input type="range" id="sip-rate-range" min="1" max="30" step="0.5" value="12" oninput="document.getElementById('sip-rate').value=this.value">
+            <input type="number" id="sip-rate" value="12" style="margin-top:10px" oninput="document.getElementById('sip-rate-range').value=this.value">
+            <div class="range-val"><span>1%</span><span>30%</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Investment Period (Years)</label>
+          <div class="range-wrap">
+            <input type="range" id="sip-years-range" min="1" max="40" step="1" value="10" oninput="document.getElementById('sip-years').value=this.value">
+            <input type="number" id="sip-years" value="10" style="margin-top:10px" oninput="document.getElementById('sip-years-range').value=this.value">
+            <div class="range-val"><span>1 yr</span><span>40 yrs</span></div>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcSIP()">Calculate Returns →</button>
+      </div>
+      <div class="results-panel" id="sip-result">
+        <div class="result-placeholder"><div class="icon">📈</div>Enter SIP details<br>to see projected wealth</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGE CALCULATOR -->
+  <div id="calc-age" class="calc-panel">
+    <div class="calc-card">
+      <div>
+        <div class="calc-title">Age Calculator</div>
+        <div class="calc-desc">Calculate your exact age in years, months, days, hours and minutes.</div>
+        <div class="field">
+          <label>Date of Birth</label>
+          <input type="date" id="age-dob" value="1995-06-15">
+        </div>
+        <div class="field">
+          <label>Calculate Age As Of</label>
+          <input type="date" id="age-today">
+        </div>
+        <button class="calc-btn" onclick="calcAge()">Calculate Age →</button>
+      </div>
+      <div class="results-panel" id="age-result">
+        <div class="result-placeholder"><div class="icon">🎂</div>Enter your date of birth<br>to see your exact age</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BMI CALCULATOR -->
+  <div id="calc-bmi" class="calc-panel">
+    <div class="calc-card">
+      <div>
+        <div class="calc-title">BMI Calculator</div>
+        <div class="calc-desc">Calculate your Body Mass Index and find out your health category.</div>
+        <div class="field">
+          <label>Height</label>
+          <div style="display:flex;gap:10px">
+            <input type="number" id="bmi-height" value="170" style="flex:1" placeholder="Height">
+            <select id="bmi-height-unit" style="width:90px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 10px;color:var(--text);font-size:0.9rem;outline:none">
+              <option value="cm">cm</option>
+              <option value="ft">ft</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Weight (kg)</label>
+          <input type="number" id="bmi-weight" value="70" placeholder="Weight in kg">
+        </div>
+        <div class="field">
+          <label>Age</label>
+          <input type="number" id="bmi-age" value="30" placeholder="Your age">
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <select id="bmi-gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <button class="calc-btn" onclick="calcBMI()">Calculate BMI →</button>
+      </div>
+      <div class="results-panel" id="bmi-result">
+        <div class="result-placeholder"><div class="icon">⚖️</div>Enter height and weight<br>to calculate BMI</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement — Google AdSense</div>
+
+</div>
+
+<footer>
+  <p>© 2025 <strong>CalcIndia</strong> — Free calculators for every Indian. <a href="#">Privacy</a> · <a href="#">Contact</a></p>
+  <p style="margin-top:8px;font-size:0.78rem">Results are for informational purposes only. Consult a financial advisor for investment decisions.</p>
+</footer>
+
+<script>
+// ─── Tab switching ───────────────────────────────────────────────────
+function showCalc(id, btn) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('calc-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmtN = n => Math.round(n).toLocaleString('en-IN');
+
+// ─── EMI ─────────────────────────────────────────────────────────────
+function calcEMI() {
+  const P = parseFloat(document.getElementById('emi-amount').value);
+  const r = parseFloat(document.getElementById('emi-rate').value) / 12 / 100;
+  let n = parseFloat(document.getElementById('emi-tenure').value);
+  if (document.getElementById('emi-tenure-type').value === 'years') n *= 12;
+  if (!P || !r || !n) return;
+  const emi = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+  const total = emi * n;
+  const interest = total - P;
+  const pPct = Math.round((P / total) * 100);
+  const iPct = 100 - pPct;
+  document.getElementById('emi-result').innerHTML = `
+    <div class="result-main">
+      <div class="result-label">Monthly EMI</div>
+      <div class="result-value">${fmt(emi)}</div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Principal Amount</span><span class="rv blue">${fmt(P)}</span></div>
+      <div class="result-row"><span class="rk">Total Interest</span><span class="rv yellow">${fmt(interest)}</span></div>
+      <div class="result-row"><span class="rk">Total Payment</span><span class="rv green">${fmt(total)}</span></div>
+      <div class="result-row"><span class="rk">Loan Tenure</span><span class="rv">${Math.round(n)} months</span></div>
+    </div>
+    <div class="chart-bar-wrap">
+      <div class="chart-label">Principal vs Interest breakdown</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${iPct}%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+      <div class="bar-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Principal ${pPct}%</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--accent)"></div>Interest ${iPct}%</div>
+      </div>
+    </div>`;
+}
+
+// ─── GST ─────────────────────────────────────────────────────────────
+document.getElementById('gst-rate').onchange = function() {
+  document.getElementById('gst-custom-wrap').style.display = this.value === 'custom' ? 'block' : 'none';
+};
+function calcGST() {
+  let amount = parseFloat(document.getElementById('gst-amount').value);
+  let rateEl = document.getElementById('gst-rate').value;
+  let rate = rateEl === 'custom' ? parseFloat(document.getElementById('gst-custom').value) : parseFloat(rateEl);
+  let type = document.getElementById('gst-type').value;
+  if (!amount || !rate) return;
+  let base, gstAmt, total, cgst, sgst;
+  if (type === 'add') {
+    base = amount; gstAmt = amount * rate / 100; total = amount + gstAmt;
+  } else {
+    total = amount; base = amount * 100 / (100 + rate); gstAmt = amount - base;
+  }
+  cgst = gstAmt / 2; sgst = gstAmt / 2;
+  document.getElementById('gst-result').innerHTML = `
+    <div class="result-main">
+      <div class="result-label">GST Amount (${rate}%)</div>
+      <div class="result-value">${fmt(gstAmt)}</div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Base Amount (excl. GST)</span><span class="rv blue">${fmt(base)}</span></div>
+      <div class="result-row"><span class="rk">CGST (${rate/2}%)</span><span class="rv yellow">${fmt(cgst)}</span></div>
+      <div class="result-row"><span class="rk">SGST (${rate/2}%)</span><span class="rv yellow">${fmt(sgst)}</span></div>
+      <div class="result-row"><span class="rk">Total (incl. GST)</span><span class="rv green">${fmt(total)}</span></div>
+    </div>`;
+}
+
+// ─── SIP ─────────────────────────────────────────────────────────────
+function calcSIP() {
+  const P = parseFloat(document.getElementById('sip-amount').value);
+  const r = parseFloat(document.getElementById('sip-rate').value) / 12 / 100;
+  const n = parseFloat(document.getElementById('sip-years').value) * 12;
+  if (!P || !r || !n) return;
+  const fv = P * (Math.pow(1+r, n) - 1) / r * (1+r);
+  const invested = P * n;
+  const gains = fv - invested;
+  const gainPct = Math.round((gains/invested)*100);
+  const invPct = Math.round((invested/fv)*100);
+  document.getElementById('sip-result').innerHTML = `
+    <div class="result-main">
+      <div class="result-label">Estimated Corpus</div>
+      <div class="result-value">${fmt(fv)}</div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Total Invested</span><span class="rv blue">${fmt(invested)}</span></div>
+      <div class="result-row"><span class="rk">Total Gains</span><span class="rv green">${fmt(gains)}</span></div>
+      <div class="result-row"><span class="rk">Return on Investment</span><span class="rv yellow">${gainPct}%</span></div>
+      <div class="result-row"><span class="rk">Duration</span><span class="rv">${Math.round(n/12)} years</span></div>
+    </div>
+    <div class="chart-bar-wrap">
+      <div class="chart-label">Invested vs Gains</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${invPct}%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${100-invPct}%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div>
+      <div class="bar-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Invested ${invPct}%</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Gains ${100-invPct}%</div>
+      </div>
+    </div>`;
+}
+
+// ─── AGE ─────────────────────────────────────────────────────────────
+document.getElementById('age-today').value = new Date().toISOString().split('T')[0];
+function calcAge() {
+  const dob = new Date(document.getElementById('age-dob').value);
+  const today = new Date(document.getElementById('age-today').value);
+  if (!dob || isNaN(dob)) return;
+  let years = today.getFullYear() - dob.getFullYear();
+  let months = today.getMonth() - dob.getMonth();
+  let days = today.getDate() - dob.getDate();
+  if (days < 0) { months--; days += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+  const totalDays = Math.floor((today - dob) / 86400000);
+  const totalMonths = years * 12 + months;
+  const nextBday = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+  if (nextBday < today) nextBday.setFullYear(today.getFullYear() + 1);
+  const daysToNext = Math.ceil((nextBday - today) / 86400000);
+  document.getElementById('age-result').innerHTML = `
+    <div class="result-main">
+      <div class="result-label">Your Age</div>
+      <div class="result-value">${years} <span style="font-size:1.2rem;color:var(--muted)">yrs</span></div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Exact Age</span><span class="rv blue">${years}y ${months}m ${days}d</span></div>
+      <div class="result-row"><span class="rk">Total Months Lived</span><span class="rv">${fmtN(totalMonths)} months</span></div>
+      <div class="result-row"><span class="rk">Total Days Lived</span><span class="rv yellow">${fmtN(totalDays)} days</span></div>
+      <div class="result-row"><span class="rk">Next Birthday In</span><span class="rv green">${daysToNext} days 🎂</span></div>
+    </div>`;
+}
+
+// ─── BMI ─────────────────────────────────────────────────────────────
+function calcBMI() {
+  let h = parseFloat(document.getElementById('bmi-height').value);
+  const w = parseFloat(document.getElementById('bmi-weight').value);
+  const unit = document.getElementById('bmi-height-unit').value;
+  if (unit === 'ft') h = h * 30.48;
+  const hm = h / 100;
+  const bmi = w / (hm * hm);
+  let cat, color, tip;
+  if (bmi < 18.5) { cat = 'Underweight'; color = 'var(--blue)'; tip = 'Consider increasing caloric intake with nutritious foods.'; }
+  else if (bmi < 25) { cat = 'Normal Weight ✓'; color = 'var(--green)'; tip = 'Great! Maintain your current healthy lifestyle.'; }
+  else if (bmi < 30) { cat = 'Overweight'; color = 'var(--accent2)'; tip = 'Consider regular exercise and a balanced diet.'; }
+  else { cat = 'Obese'; color = 'var(--accent)'; tip = 'Consult a doctor for a personalized health plan.'; }
+  const pct = Math.min(Math.max(((bmi - 10) / 30) * 100, 5), 95);
+  document.getElementById('bmi-result').innerHTML = `
+    <div class="result-main">
+      <div class="result-label">Your BMI</div>
+      <div class="result-value" style="color:${color}">${bmi.toFixed(1)}</div>
+      <div style="color:${color};font-size:0.9rem;margin-top:6px;font-weight:500">${cat}</div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Height</span><span class="rv">${h.toFixed(0)} cm</span></div>
+      <div class="result-row"><span class="rk">Weight</span><span class="rv">${w} kg</span></div>
+      <div class="result-row"><span class="rk">Ideal Weight Range</span><span class="rv blue">${(18.5*hm*hm).toFixed(0)}–${(24.9*hm*hm).toFixed(0)} kg</span></div>
+    </div>
+    <div class="chart-bar-wrap" style="margin-top:18px">
+      <div class="chart-label">BMI Scale</div>
+      <div style="background:linear-gradient(90deg,var(--blue),var(--green),var(--accent2),var(--accent));height:12px;border-radius:6px;position:relative;">
+        <div style="position:absolute;top:-4px;left:${pct}%;transform:translateX(-50%);width:20px;height:20px;background:#fff;border-radius:50%;border:3px solid ${color};box-shadow:0 0 8px ${color}"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:8px">
+        <span>Underweight<br>&lt;18.5</span><span>Normal<br>18.5–25</span><span>Overweight<br>25–30</span><span>Obese<br>&gt;30</span>
+      </div>
+    </div>
+    <div style="margin-top:18px;background:rgba(255,255,255,0.03);border-radius:10px;padding:12px 14px;font-size:0.83rem;color:var(--muted);line-height:1.6">💡 ${tip}</div>`;
+}
+</script>
+</body>
+</html>
