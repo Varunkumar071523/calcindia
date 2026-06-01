@@ -1,20 +1,332 @@
-<html><head><title>FD Calculator</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FD Calculator India 2026 | Fixed Deposit Maturity Calculator</title>
+
+<meta name="description"
+content="Calculate Fixed Deposit maturity amount and interest earnings instantly. Free FD Calculator for India with quarterly, monthly and yearly compounding.">
+
+<meta name="keywords"
+content="FD Calculator India, Fixed Deposit Calculator, SBI FD Calculator, HDFC FD Calculator, FD Interest Calculator">
+
 <style>
-body{font-family:Arial,sans-serif;background:#0d0f14;color:#eef0f6;max-width:1000px;margin:auto;padding:20px}
-nav a{color:#ff6b35;margin-right:12px;text-decoration:none}
-.card{background:#1a1e2a;padding:20px;border-radius:12px;margin-top:20px}
-input,button{padding:10px;margin:5px;width:100%}
-button{background:#ff6b35;color:white;border:none}
-footer{margin-top:30px}
+
+:root{
+--bg:#0d0f14;
+--card:#1a1e2a;
+--surface:#14171f;
+--border:#252a38;
+--accent:#ff6b35;
+--text:#eef0f6;
+--muted:#7a8099;
+--green:#06d6a0;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+nav{
+padding:20px 5%;
+border-bottom:1px solid var(--border);
+}
+
+nav a{
+color:var(--text);
+text-decoration:none;
+margin-right:20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:40px 20px;
+}
+
+.hero{
+text-align:center;
+margin-bottom:40px;
+}
+
+.hero h1{
+font-size:2.8rem;
+margin-bottom:15px;
+}
+
+.hero p{
+color:var(--muted);
+}
+
+.card{
+background:var(--card);
+padding:30px;
+border-radius:16px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+@media(max-width:768px){
+.card{
+grid-template-columns:1fr;
+}
+}
+
+.field{
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+color:var(--muted);
+}
+
+input,select{
+width:100%;
+padding:14px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:10px;
+color:var(--text);
+}
+
+button{
+width:100%;
+padding:14px;
+background:var(--accent);
+border:none;
+border-radius:10px;
+color:white;
+font-size:1rem;
+cursor:pointer;
+}
+
+.result{
+background:var(--surface);
+padding:25px;
+border-radius:16px;
+}
+
+.result h2{
+color:var(--accent);
+margin-bottom:20px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+.ad{
+margin:40px 0;
+padding:30px;
+border:1px dashed var(--border);
+text-align:center;
+border-radius:12px;
+color:var(--muted);
+}
+
+.content{
+margin-top:50px;
+line-height:1.8;
+}
+
+.content h2{
+margin-top:30px;
+margin-bottom:15px;
+}
+
+footer{
+margin-top:60px;
+padding:30px;
+text-align:center;
+border-top:1px solid var(--border);
+color:var(--muted);
+}
+
 </style>
-</head><body>
+</head>
+
+<body>
+
 <nav>
 <a href="index.html">Home</a>
 <a href="emi-calculator.html">EMI</a>
 <a href="sip-calculator.html">SIP</a>
 <a href="fd-calculator.html">FD</a>
-<a href="ppf-calculator.html">PPF</a>
-<a href="gratuity-calculator.html">Gratuity</a>
-<a href="income-tax-calculator.html">Income Tax</a>
 </nav>
-<h1>FD Calculator</h1><div class='card'><p>Dedicated FD calculator page.</p></div></body></html>
+
+<div class="container">
+
+<div class="hero">
+<h1>FD Calculator India</h1>
+<p>Calculate your Fixed Deposit maturity amount and interest earned instantly.</p>
+</div>
+
+<div class="card">
+
+<div>
+
+<div class="field">
+<label>Deposit Amount (₹)</label>
+<input type="number" id="principal" value="100000">
+</div>
+
+<div class="field">
+<label>Interest Rate (%)</label>
+<input type="number" id="rate" value="7">
+</div>
+
+<div class="field">
+<label>Investment Period (Years)</label>
+<input type="number" id="years" value="5">
+</div>
+
+<div class="field">
+<label>Compounding Frequency</label>
+<select id="compound">
+<option value="12">Monthly</option>
+<option value="4" selected>Quarterly</option>
+<option value="1">Yearly</option>
+</select>
+</div>
+
+<button onclick="calculateFD()">Calculate FD</button>
+
+</div>
+
+<div class="result" id="result">
+
+<h2>FD Result</h2>
+
+<div class="row">
+<span>Maturity Amount</span>
+<span>₹0</span>
+</div>
+
+<div class="row">
+<span>Total Interest</span>
+<span>₹0</span>
+</div>
+
+<div class="row">
+<span>Total Investment</span>
+<span>₹0</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="ad">
+Google AdSense Placement
+</div>
+
+<div class="content">
+
+<h2>What is a Fixed Deposit?</h2>
+
+<p>
+A Fixed Deposit (FD) is one of the safest investment options in India.
+Banks and NBFCs offer fixed interest rates for a specified period.
+</p>
+
+<h2>How FD Maturity is Calculated</h2>
+
+<p>
+FD maturity amount depends on:
+</p>
+
+<ul>
+<li>Principal Amount</li>
+<li>Interest Rate</li>
+<li>Investment Tenure</li>
+<li>Compounding Frequency</li>
+</ul>
+
+<h2>Benefits of Fixed Deposits</h2>
+
+<ul>
+<li>Guaranteed Returns</li>
+<li>Low Risk Investment</li>
+<li>Flexible Tenure</li>
+<li>Loan Against FD Facility</li>
+</ul>
+
+</div>
+
+<footer>
+
+<p>
+© 2026 CalcIndia
+</p>
+
+<p>
+<a href="privacy.html">Privacy Policy</a> |
+<a href="contact.html">Contact</a> |
+<a href="about.html">About</a>
+</p>
+
+</footer>
+
+</div>
+
+<script>
+
+function formatINR(num){
+return "₹" + Math.round(num).toLocaleString('en-IN');
+}
+
+function calculateFD(){
+
+let P=parseFloat(document.getElementById("principal").value);
+let R=parseFloat(document.getElementById("rate").value)/100;
+let T=parseFloat(document.getElementById("years").value);
+let N=parseFloat(document.getElementById("compound").value);
+
+let maturity=P*Math.pow((1+R/N),(N*T));
+
+let interest=maturity-P;
+
+document.getElementById("result").innerHTML=`
+
+<h2>Maturity Result</h2>
+
+<div class="row">
+<span>Maturity Amount</span>
+<span>${formatINR(maturity)}</span>
+</div>
+
+<div class="row">
+<span>Total Interest Earned</span>
+<span style="color:#06d6a0">${formatINR(interest)}</span>
+</div>
+
+<div class="row">
+<span>Total Investment</span>
+<span>${formatINR(P)}</span>
+</div>
+
+`;
+
+}
+
+calculateFD();
+
+</script>
+
+</body>
+</html>

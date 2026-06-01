@@ -1,20 +1,376 @@
-<html><head><title>Income Tax Calculator</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Income Tax Calculator India 2026 | Compare New vs Old Tax Regime</title>
+
+<meta name="description"
+content="Calculate your income tax instantly. Compare New Tax Regime and Old Tax Regime and find potential tax savings.">
+
+<meta name="keywords"
+content="Income Tax Calculator India, Tax Calculator 2026, New Tax Regime, Old Tax Regime">
+
 <style>
-body{font-family:Arial,sans-serif;background:#0d0f14;color:#eef0f6;max-width:1000px;margin:auto;padding:20px}
-nav a{color:#ff6b35;margin-right:12px;text-decoration:none}
-.card{background:#1a1e2a;padding:20px;border-radius:12px;margin-top:20px}
-input,button{padding:10px;margin:5px;width:100%}
-button{background:#ff6b35;color:white;border:none}
-footer{margin-top:30px}
+:root{
+--bg:#0d0f14;
+--card:#1a1e2a;
+--surface:#14171f;
+--border:#252a38;
+--accent:#ff6b35;
+--green:#06d6a0;
+--text:#eef0f6;
+--muted:#7a8099;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+nav{
+padding:20px 5%;
+border-bottom:1px solid var(--border);
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-right:20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:40px 20px;
+}
+
+.hero{
+text-align:center;
+margin-bottom:40px;
+}
+
+.hero h1{
+font-size:2.8rem;
+margin-bottom:10px;
+}
+
+.hero p{
+color:var(--muted);
+}
+
+.card{
+background:var(--card);
+padding:30px;
+border-radius:16px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+@media(max-width:768px){
+.card{
+grid-template-columns:1fr;
+}
+}
+
+.field{
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+color:var(--muted);
+}
+
+input{
+width:100%;
+padding:14px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:10px;
+color:white;
+}
+
+button{
+width:100%;
+padding:14px;
+background:var(--accent);
+border:none;
+border-radius:10px;
+color:white;
+font-size:1rem;
+cursor:pointer;
+}
+
+.result{
+background:var(--surface);
+padding:25px;
+border-radius:16px;
+}
+
+.result h2{
+color:var(--accent);
+margin-bottom:20px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+.ad{
+margin:40px 0;
+padding:30px;
+border:1px dashed var(--border);
+border-radius:12px;
+text-align:center;
+color:var(--muted);
+}
+
+.content{
+margin-top:50px;
+line-height:1.8;
+}
+
+.content h2{
+margin-top:30px;
+margin-bottom:15px;
+}
+
+footer{
+margin-top:60px;
+padding:30px;
+text-align:center;
+border-top:1px solid var(--border);
+color:var(--muted);
+}
 </style>
-</head><body>
+</head>
+
+<body>
+
 <nav>
 <a href="index.html">Home</a>
 <a href="emi-calculator.html">EMI</a>
 <a href="sip-calculator.html">SIP</a>
 <a href="fd-calculator.html">FD</a>
-<a href="ppf-calculator.html">PPF</a>
-<a href="gratuity-calculator.html">Gratuity</a>
 <a href="income-tax-calculator.html">Income Tax</a>
 </nav>
-<h1>Income Tax Calculator</h1><div class='card'><p>Dedicated Income Tax calculator page.</p></div></body></html>
+
+<div class="container">
+
+<div class="hero">
+<h1>Income Tax Calculator India</h1>
+<p>Compare New Tax Regime and Old Tax Regime instantly.</p>
+</div>
+
+<div class="card">
+
+<div>
+
+<div class="field">
+<label>Annual Income (₹)</label>
+<input type="number" id="income" value="1200000">
+</div>
+
+<div class="field">
+<label>Eligible Deductions (80C etc.) (₹)</label>
+<input type="number" id="deduction" value="150000">
+</div>
+
+<button onclick="calculateTax()">Calculate Tax</button>
+
+</div>
+
+<div class="result" id="result">
+
+<h2>Tax Summary</h2>
+
+<div class="row">
+<span>New Regime Tax</span>
+<span>₹0</span>
+</div>
+
+<div class="row">
+<span>Old Regime Tax</span>
+<span>₹0</span>
+</div>
+
+<div class="row">
+<span>Potential Savings</span>
+<span>₹0</span>
+</div>
+
+</div>
+
+</div>
+
+<div style="
+margin-top:25px;
+padding:15px;
+background:#14171f;
+border:1px solid #252a38;
+border-radius:10px;
+font-size:0.9rem;
+color:#7a8099;
+line-height:1.6;
+">
+⚠️ This calculator provides estimated tax calculations for educational and informational purposes only. Tax laws, exemptions, deductions, and slab rates may change. Please consult a Chartered Accountant (CA), tax consultant, or financial advisor before making tax-related decisions.
+</div>
+
+<div class="ad">
+Google AdSense Placement
+</div>
+
+<div class="content">
+
+<h2>Income Tax in India</h2>
+
+<p>
+Income tax is charged on earnings from salary, business, investments and other sources.
+Choosing the correct tax regime can help reduce your tax burden.
+</p>
+
+<h2>New Tax Regime</h2>
+
+<p>
+The New Tax Regime offers lower tax rates but fewer deductions.
+It is suitable for taxpayers who do not claim significant exemptions.
+</p>
+
+<h2>Old Tax Regime</h2>
+
+<p>
+The Old Tax Regime allows deductions under sections such as 80C, 80D and HRA.
+It can be beneficial for taxpayers with large deductions.
+</p>
+
+<h2>How to Save Tax Legally</h2>
+
+<ul>
+<li>Invest under Section 80C</li>
+<li>Health Insurance under 80D</li>
+<li>NPS Contributions</li>
+<li>Home Loan Benefits</li>
+<li>Education Loan Benefits</li>
+</ul>
+
+</div>
+
+<footer>
+
+<p>© 2026 CalcIndia</p>
+
+<p>
+<a href="about.html">About</a> |
+<a href="contact.html">Contact</a> |
+<a href="privacy.html">Privacy Policy</a> |
+<a href="disclaimer.html">Disclaimer</a>
+</p>
+
+<p style="
+margin-top:15px;
+font-size:0.8rem;
+color:#7a8099;
+max-width:800px;
+margin-left:auto;
+margin-right:auto;
+line-height:1.6;
+">
+Income tax calculations displayed on CalcIndia are estimates only and should not be considered tax, legal, accounting, or financial advice. Always verify calculations with official government resources or a qualified professional.
+</p>
+
+</footer>
+
+</div>
+
+<script>
+
+function formatINR(num){
+return "₹" + Math.round(num).toLocaleString('en-IN');
+}
+
+function calculateTax(){
+
+let income=parseFloat(document.getElementById('income').value)||0;
+let deduction=parseFloat(document.getElementById('deduction').value)||0;
+
+let oldTaxable=Math.max(0,income-deduction);
+
+let oldTax=0;
+
+if(oldTaxable>1000000){
+oldTax=(oldTaxable-1000000)*0.30+112500;
+}
+else if(oldTaxable>500000){
+oldTax=(oldTaxable-500000)*0.20+12500;
+}
+else if(oldTaxable>250000){
+oldTax=(oldTaxable-250000)*0.05;
+}
+
+let newTax=0;
+
+if(income>1200000){
+newTax=(income-1200000)*0.15+60000;
+}
+else if(income>800000){
+newTax=(income-800000)*0.10+20000;
+}
+else if(income>400000){
+newTax=(income-400000)*0.05;
+}
+
+let savings=Math.abs(oldTax-newTax);
+
+let better=oldTax<newTax
+? "Old Tax Regime"
+: "New Tax Regime";
+
+document.getElementById('result').innerHTML=`
+
+<h2>Tax Comparison</h2>
+
+<div class="row">
+<span>New Regime Tax</span>
+<span>${formatINR(newTax)}</span>
+</div>
+
+<div class="row">
+<span>Old Regime Tax</span>
+<span>${formatINR(oldTax)}</span>
+</div>
+
+<div class="row">
+<span>Potential Savings</span>
+<span style="color:#06d6a0">${formatINR(savings)}</span>
+</div>
+
+<hr style="margin:20px 0;border-color:#252a38">
+
+<div class="row">
+<span>Better Option</span>
+<span style="color:#06d6a0">${better}</span>
+</div>
+
+`;
+
+}
+
+calculateTax();
+
+</script>
+
+</body>
+</html>
